@@ -1,0 +1,11 @@
+<?php
+
+// Copy this file to config/params-local.php (gitignored) and fill in real values.
+// See docs/telegram-setup.md for how to obtain a Telegram bot token and chat id.
+// Generate a cookieValidationKey with: php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"
+
+return [
+    'cookieValidationKey' => 'replace-me-with-a-long-random-string',
+    'telegramBotToken' => '123456789:AA...replace-me',
+    'telegramChatId' => '-1001234567890',
+];
