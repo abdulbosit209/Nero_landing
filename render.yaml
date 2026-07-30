@@ -1,0 +1,24 @@
+# Render Blueprint — https://render.com/docs/blueprint-spec
+# In the Render dashboard: New + -> Blueprint -> connect this repo. Render reads this
+# file automatically and provisions the service below; you only need to fill in the
+# "sync: false" secrets it prompts for.
+services:
+  - type: web
+    name: nero-landing
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: YII_ENV
+        value: prod
+      - key: YII_DEBUG
+        value: "0"
+      # Secrets — entered manually in the Render dashboard, never stored in this file.
+      # Generate one with: php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"
+      - key: COOKIE_VALIDATION_KEY
+        sync: false
+      # See docs/telegram-setup.md for how to obtain these two.
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: TELEGRAM_CHAT_ID
+        sync: false

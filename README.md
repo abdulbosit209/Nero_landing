@@ -158,6 +158,28 @@ vendor/bin/codecept run tests/Functional/LeadFormCest.php --env php-builtin
 Under Docker, prefix commands with `docker compose exec -T php` and build actor
 classes first (`vendor/bin/codecept build`).
 
+## Deployment
+
+The included `Dockerfile` builds a self-contained image (PHP built-in server, no
+database required) that runs on any Docker-capable host. `render.yaml` is a
+[Render](https://render.com) Blueprint that deploys straight from it on Render's free
+tier:
+
+1. Push this repo to GitHub (already done if you're reading this from there).
+2. On Render: **New +** -> **Blueprint** -> connect this repo. Render reads
+   `render.yaml` and provisions the service automatically.
+3. Fill in the three secrets it prompts for (not stored in the blueprint):
+   - `COOKIE_VALIDATION_KEY` — generate with
+     `php -r "echo bin2hex(random_bytes(32)), PHP_EOL;"`
+   - `TELEGRAM_BOT_TOKEN` / `TELEGRAM_CHAT_ID` — see
+     [docs/telegram-setup.md](docs/telegram-setup.md)
+4. Deploy. You'll get a free `https://<service-name>.onrender.com` URL.
+
+The free tier spins the service down after ~15 minutes of inactivity, so the first
+request after a quiet period takes a few seconds to wake back up. `web/index.php`
+reads `YII_ENV`/`YII_DEBUG` from the environment (see `render.yaml`), so debug mode
+and dev-only modules (`debug`, `gii`) stay off in production automatically.
+
 ## License
 
 BSD-3-Clause — see [LICENSE.md](LICENSE.md) (inherited from the Yii 2 Basic Project

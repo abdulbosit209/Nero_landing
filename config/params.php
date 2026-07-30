@@ -38,6 +38,16 @@ $params = [
     ],
 ];
 
+// Container/PaaS deploys (see Dockerfile, render.yaml) have no params-local.php — they
+// supply secrets as environment variables instead.
+$envOverrides = array_filter([
+    'cookieValidationKey' => getenv('COOKIE_VALIDATION_KEY') ?: null,
+    'telegramBotToken' => getenv('TELEGRAM_BOT_TOKEN') ?: null,
+    'telegramChatId' => getenv('TELEGRAM_CHAT_ID') ?: null,
+], static fn ($value) => $value !== null);
+$params = array_merge($params, $envOverrides);
+
+// Local dev override file takes precedence over both the defaults above and env vars.
 $localParamsFile = __DIR__ . '/params-local.php';
 if (is_file($localParamsFile)) {
     $params = array_merge($params, require $localParamsFile);
