@@ -72,8 +72,12 @@ to `runtime/logs/app.log` and no-ops if these aren't set).
 Run the dev server:
 
 ```bash
-php yii serve
+php yii serve --router=router.php
 ```
+
+(`router.php` makes the built-in server honor pretty URLs — see `config/web.php`'s
+`urlManager`. Without it, any URL other than `/` 404s since the built-in server
+doesn't read `web/.htaccess` the way Apache would.)
 
 ...or with Docker:
 

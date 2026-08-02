@@ -17,6 +17,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install -j"$(nproc)" intl gd zip mbstring ctype iconv \
     && rm -rf /var/lib/apt/lists/*
 
+COPY docker/uploads.ini /usr/local/etc/php/conf.d/uploads.ini
+
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 
 WORKDIR /app
@@ -37,4 +39,6 @@ ENV YII_ENV=prod
 ENV YII_DEBUG=0
 
 # Render (and most PaaS Docker hosts) assign the listen port via $PORT at runtime.
-CMD php -S 0.0.0.0:${PORT:-10000} -t web
+# router.php enables pretty URLs (see config/web.php urlManager) under the
+# built-in server, which doesn't read web/.htaccess like Apache would.
+CMD php -S 0.0.0.0:${PORT:-10000} -t web router.php

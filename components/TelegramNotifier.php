@@ -16,6 +16,10 @@ use yii\web\UploadedFile;
  */
 class TelegramNotifier
 {
+    /** Telegram accepts far larger photos, but this keeps uploads fast and consistent
+     *  regardless of what the phone camera originally produced. */
+    private const MAX_PHOTO_BYTES = 2 * 1024 * 1024;
+
     private readonly string $_botToken;
     private readonly string $_chatId;
     private readonly Client $_client;
@@ -83,6 +87,8 @@ class TelegramNotifier
      */
     private function sendSinglePhoto(UploadedFile $photo, string $caption): void
     {
+        [$contents, $filename] = $this->preparePhoto($photo);
+
         $this->_client->post('sendPhoto', [
             'multipart' => [
                 ['name' => 'chat_id', 'contents' => $this->_chatId],
@@ -90,8 +96,8 @@ class TelegramNotifier
                 ['name' => 'parse_mode', 'contents' => 'HTML'],
                 [
                     'name' => 'photo',
-                    'contents' => fopen($photo->tempName, 'rb'),
-                    'filename' => $photo->name,
+                    'contents' => $contents,
+                    'filename' => $filename,
                 ],
             ],
         ]);
@@ -121,16 +127,38 @@ class TelegramNotifier
             }
             $media[] = $item;
 
+            [$contents, $filename] = $this->preparePhoto($photo);
             $multipart[] = [
                 'name' => $attachName,
-                'contents' => fopen($photo->tempName, 'rb'),
-                'filename' => $photo->name,
+                'contents' => $contents,
+                'filename' => $filename,
             ];
         }
 
         $multipart[] = ['name' => 'media', 'contents' => json_encode($media)];
 
         $this->_client->post('sendMediaGroup', ['multipart' => $multipart]);
+    }
+
+    /**
+     * Compresses a photo under MAX_PHOTO_BYTES if needed and returns its contents
+     * paired with the filename Telegram should see — re-encoding (when it happens)
+     * always produces a JPEG, so the extension is corrected to match.
+     *
+     * @return array{0: string, 1: string}
+     */
+    private function preparePhoto(UploadedFile $photo): array
+    {
+        $contents = ImageCompressor::compress($photo->tempName, self::MAX_PHOTO_BYTES);
+
+        $originalSize = filesize($photo->tempName);
+        if ($originalSize !== false && $originalSize <= self::MAX_PHOTO_BYTES) {
+            return [$contents, $photo->name];
+        }
+
+        $filename = preg_replace('/\.[^.\/]+$/', '', $photo->name) . '.jpg';
+
+        return [$contents, $filename];
     }
 
     private function buildMessage(LeadForm $model): string
@@ -142,6 +170,8 @@ class TelegramNotifier
             'Name: ' . Html::encode($model->name),
             'Phone: ' . Html::encode($model->phoneNumber),
             'Service: ' . Html::encode(LeadForm::serviceOptions()[$model->service] ?? $model->service),
+            'Date: ' . Html::encode($model->preferredDate),
+            'Time: ' . Html::encode($model->preferredTime),
         ];
 
         if ($model->description !== '') {

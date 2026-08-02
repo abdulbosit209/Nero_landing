@@ -64,12 +64,29 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
             ->label(Yii::t('app', 'form.label.service'), $labelOptions)
             ->dropDownList(LeadForm::serviceOptions(), ['prompt' => Yii::t('app', 'form.service.placeholder')]) ?>
 
+        <div class="nero-form-row">
+            <?= $form->field($model, 'preferredDate', ['template' => "{label}\n{input}\n{error}"])
+                ->label(Yii::t('app', 'form.label.preferredDate'), $labelOptions)
+                ->input('date', [
+                    'id' => 'lead-form-date',
+                    'min' => date('Y-m-d'),
+                    'autocomplete' => 'off',
+                ]) ?>
+
+            <?= $form->field($model, 'preferredTime', ['template' => "{label}\n{input}\n{error}"])
+                ->label(Yii::t('app', 'form.label.preferredTime'), $labelOptions)
+                ->dropDownList(
+                    LeadForm::timeOptions(),
+                    ['prompt' => Yii::t('app', 'form.time.placeholder')]
+                ) ?>
+        </div>
+
         <?= $form->field($model, 'description', ['template' => "{label}\n{input}\n{error}"])
             ->label(Yii::t('app', 'form.label.description'), $labelOptions)
             ->textarea(['rows' => 3, 'placeholder' => Yii::t('app', 'form.placeholder.description')]) ?>
 
         <div>
-            <label class="nero-file-label">
+            <label id="lead-form-photo-label" class="nero-file-label">
                 <?= Html::encode(Yii::t('app', 'form.upload')) ?>
                 <?= $form->field($model, 'photos[]', [
                     'template' => '{input}{error}',
@@ -111,11 +128,12 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
 (function () {
     var input = document.getElementById('leadform-photos');
     var previews = document.getElementById('lead-form-photo-previews');
+    var uploadLabel = document.getElementById('lead-form-photo-label');
     if (!input || !previews) {
         return;
     }
     var removeLabel = previews.dataset.removeLabel || 'Remove';
-    var maxFiles = parseInt(previews.dataset.maxFiles, 10) || 5;
+    var maxFiles = parseInt(previews.dataset.maxFiles, 10) || 4;
 
     // A native <input type="file"> REPLACES its selection every time the picker is
     // used — it never appends. So if a user taps "upload", picks one photo, then taps
@@ -158,6 +176,12 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
 
             previews.appendChild(item);
         });
+
+        if (uploadLabel) {
+            var atLimit = selectedFiles.length >= maxFiles;
+            input.disabled = atLimit;
+            uploadLabel.classList.toggle('is-disabled', atLimit);
+        }
     }
 
     input.addEventListener('change', function () {
@@ -169,6 +193,44 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
         syncInput();
         render();
     });
+})();
+
+(function () {
+    // The date field must only be set via the native picker, never typed — this keeps
+    // submitted dates well-formed without extra client-side parsing. We deliberately
+    // avoid the `readonly` attribute: readonly inputs are "immutable" per spec, and
+    // showPicker() throws on an immutable input, which would block the picker too.
+    // Blocking keyboard entry by hand achieves the same "pick, don't type" result
+    // while leaving the field mutable enough for showPicker() to keep working.
+    var dateInput = document.getElementById('lead-form-date');
+    if (!dateInput) {
+        return;
+    }
+
+    function openPicker() {
+        if (typeof dateInput.showPicker === 'function') {
+            try {
+                dateInput.showPicker();
+            } catch (err) {
+                // Ignore: some browsers throw if a picker is already open.
+            }
+        }
+    }
+
+    dateInput.addEventListener('keydown', function (e) {
+        if (e.key !== 'Tab') {
+            e.preventDefault();
+        }
+    });
+    dateInput.addEventListener('paste', function (e) {
+        e.preventDefault();
+    });
+    dateInput.addEventListener('mousedown', function (e) {
+        e.preventDefault();
+        dateInput.focus();
+        openPicker();
+    });
+    dateInput.addEventListener('focus', openPicker);
 })();
 JS
 ) ?>

@@ -16,7 +16,7 @@ use yii\helpers\Url;
 $navItems = [
     'services' => Yii::t('app', 'nav.services'),
     'advantages' => Yii::t('app', 'nav.advantages'),
-    'works' => Yii::t('app', 'nav.works'),
+    // 'works' => Yii::t('app', 'nav.works'),
     'pricing' => Yii::t('app', 'nav.pricing'),
     'compare' => Yii::t('app', 'nav.compare'),
     'faq' => Yii::t('app', 'nav.faq'),

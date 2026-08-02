@@ -816,6 +816,31 @@ section[id] {
     color: var(--nero-accent);
 }
 
+.nero-pricing-variants {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: auto;
+}
+
+.nero-pricing-variant-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.nero-pricing-variant-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: var(--nero-text-muted-3);
+}
+
+.nero-pricing-amount-sm {
+    font-size: 20px;
+}
+
 .nero-pricing-cta {
     display: block;
     text-align: center;
@@ -1016,6 +1041,20 @@ section[id] {
     box-shadow: 0 0 0 .2rem oklch(0.74 0.15 55 / 25%);
 }
 
+.nero-form-card input[type="date"] {
+    cursor: pointer;
+}
+
+.nero-form-row {
+    display: flex;
+    gap: 16px;
+}
+
+.nero-form-row > div {
+    flex: 1;
+    min-width: 0;
+}
+
 .nero-form-card label.form-label {
     font-size: 13px;
     font-weight: 700;
@@ -1049,6 +1088,12 @@ section[id] {
 .nero-file-label:hover {
     border-color: rgba(242, 142, 66, 0.6);
     border-color: oklch(0.74 0.15 55 / 60%);
+}
+
+.nero-file-label.is-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .nero-photo-preview-grid {

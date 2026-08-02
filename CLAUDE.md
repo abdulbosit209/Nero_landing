@@ -15,8 +15,10 @@ composer install
 
 Run the dev server (built-in PHP server):
 ```
-php yii serve
+php yii serve --router=router.php
 ```
+(`router.php` at the repo root makes pretty URLs — see `config/web.php`'s `urlManager` —
+work under the built-in server, which doesn't read `web/.htaccess` like Apache would.)
 or via Docker:
 ```
 docker-compose up -d

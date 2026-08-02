@@ -29,11 +29,19 @@ $params = [
     'phoneNumber' => '+998 90 000 00 00',
     'address' => 'Tashkent, Uzbekistan',
 
-    // starting prices per service category, in UZS (edit with real prices)
+    // starting prices per service category, in UZS (edit with real prices).
+    // A value may be a single number, or an array of 'bodyType' => price when the
+    // price varies by car body type (see pricing.bodyType.* in messages/{lang}/app.php
+    // for the labels shown for each bodyType key) — views/site/_pricing.php renders
+    // either shape.
     'pricing' => [
-        'dent' => 150000,
-        'paint' => 100000,
-        'polish' => 300000,
+        'dent' => 200000,
+        'paint' => 500000,
+        'polish' => [
+            'sedan' => 500000,
+            'crossover' => 700000,
+        ],
+        'ceramic' => 3500000,
         'glass' => 120000,
     ],
 ];

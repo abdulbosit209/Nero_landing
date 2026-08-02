@@ -29,7 +29,7 @@ $address = Yii::$app->params['address'] ?? '';
             <div class="nero-footer-col-title"><?= Html::encode(Yii::t('app', 'footer.navTitle')) ?></div>
             <div class="nero-footer-links">
                 <a href="<?= Url::to(['/site/index', '#' => 'services']) ?>"><?= Html::encode(Yii::t('app', 'nav.services')) ?></a>
-                <a href="<?= Url::to(['/site/index', '#' => 'works']) ?>"><?= Html::encode(Yii::t('app', 'nav.works')) ?></a>
+                <!-- <a href="<?= Url::to(['/site/index', '#' => 'works']) ?>"><?= Html::encode(Yii::t('app', 'nav.works')) ?></a> -->
                 <a href="<?= Url::to(['/site/index', '#' => 'pricing']) ?>"><?= Html::encode(Yii::t('app', 'nav.pricing')) ?></a>
                 <a href="<?= Url::to(['/site/index', '#' => 'contact']) ?>"><?= Html::encode(Yii::t('app', 'nav.contact')) ?></a>
             </div>

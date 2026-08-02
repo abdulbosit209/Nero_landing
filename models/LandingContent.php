@@ -26,7 +26,7 @@ final class LandingContent
      *
      * @var string[]
      */
-    public const SERVICES = ['dent', 'paint', 'polish', 'glass'];
+    public const SERVICES = ['dent', 'paint', 'polish', 'ceramic', 'glass'];
 
     /**
      * "Recent work" gallery entries. Currently mirrors SERVICES 1:1 (one showcased
