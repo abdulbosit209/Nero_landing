@@ -15,9 +15,8 @@ use app\models\LeadForm;
 use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
-$phoneNumber = Yii::$app->params['phoneNumber'] ?? '';
+$phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
 $address = Yii::$app->params['address'] ?? '';
-$phoneHref = 'tel:' . preg_replace('/[^+\d]/', '', $phoneNumber);
 // Field labels are visually hidden (placeholders carry the visible hint) but remain in
 // the DOM for screen readers.
 $labelOptions = ['class' => 'visually-hidden form-label'];
@@ -33,7 +32,9 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
             <div class="nero-contact-info-row">
                 <div>
                     <div class="nero-contact-label"><?= Html::encode(Yii::t('app', 'contact.phoneLabel')) ?></div>
-                    <a class="nero-contact-phone" href="<?= Html::encode($phoneHref) ?>"><?= Html::encode($phoneNumber) ?></a>
+                    <?php foreach ($phoneNumbers as $phoneNumber): ?>
+                        <a class="nero-contact-phone" href="<?= Html::encode('tel:' . preg_replace('/[^+\d]/', '', $phoneNumber)) ?>"><?= Html::encode($phoneNumber) ?></a>
+                    <?php endforeach; ?>
                 </div>
                 <div>
                     <div class="nero-contact-label"><?= Html::encode(Yii::t('app', 'contact.addressLabel')) ?></div>
@@ -54,7 +55,7 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
 
         <?= $form->field($model, 'name', ['template' => "{label}\n{input}\n{error}"])
             ->label(Yii::t('app', 'form.label.name'), $labelOptions)
-            ->textInput(['placeholder' => Yii::t('app', 'form.placeholder.name'), 'autofocus' => true]) ?>
+            ->textInput(['placeholder' => Yii::t('app', 'form.placeholder.name')]) ?>
 
         <?= $form->field($model, 'phoneNumber', ['template' => "{label}\n{input}\n{error}"])
             ->label(Yii::t('app', 'form.label.phoneNumber'), $labelOptions)

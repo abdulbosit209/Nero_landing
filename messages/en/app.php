@@ -6,7 +6,7 @@ return [
     'meta.title' => 'NERO — Mobile Auto Detailing & Dent Repair in Tashkent',
     'meta.description' => 'NERO is a mobile auto service in Tashkent: paintless dent removal, paint touch-up, polishing, ceramic coating and glass restoration — certified specialists come to you.',
 
-    'topBadge' => '24/7 mobile auto service · Tashkent',
+    'topBadge' => '24/7 auto service · Tashkent',
 
     'nav.services' => 'Services',
     'nav.advantages' => 'Advantages',
@@ -14,6 +14,7 @@ return [
     'nav.pricing' => 'Pricing',
     'nav.compare' => 'Compare',
     'nav.faq' => 'FAQ',
+    'nav.branches' => 'Branches',
     'nav.contact' => 'Contact',
 
     'ctaRequest' => 'Submit a Request',
@@ -111,6 +112,10 @@ return [
     'faq.payment.a' => 'Cash, card, Uzcard, Humo, and bank transfer are all accepted on completion.',
     'faq.spotRepair.q' => 'Can you fix just the scratched spot, not the whole panel?',
     'faq.spotRepair.a' => 'Yes, our cosmetic touch-up service targets only the damaged area to keep costs down.',
+
+    'branches.sectionEyebrow' => 'Branches',
+    'branches.sectionTitle' => 'Our Branches',
+    'branches.sectionSub' => 'Our branches across Tashkent — find the nearest one on the map.',
 
     'contact.sectionEyebrow' => 'Contact Us',
     'contact.sectionTitle' => 'Submit a request for a callout',

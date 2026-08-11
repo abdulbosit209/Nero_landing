@@ -12,7 +12,7 @@ declare(strict_types=1);
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$phoneNumber = Yii::$app->params['phoneNumber'] ?? '';
+$phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
 $address = Yii::$app->params['address'] ?? '';
 ?>
 <footer id="footer">
@@ -31,13 +31,16 @@ $address = Yii::$app->params['address'] ?? '';
                 <a href="<?= Url::to(['/site/index', '#' => 'services']) ?>"><?= Html::encode(Yii::t('app', 'nav.services')) ?></a>
                 <!-- <a href="<?= Url::to(['/site/index', '#' => 'works']) ?>"><?= Html::encode(Yii::t('app', 'nav.works')) ?></a> -->
                 <a href="<?= Url::to(['/site/index', '#' => 'pricing']) ?>"><?= Html::encode(Yii::t('app', 'nav.pricing')) ?></a>
+                <a href="<?= Url::to(['/site/index', '#' => 'branches']) ?>"><?= Html::encode(Yii::t('app', 'nav.branches')) ?></a>
                 <a href="<?= Url::to(['/site/index', '#' => 'contact']) ?>"><?= Html::encode(Yii::t('app', 'nav.contact')) ?></a>
             </div>
         </div>
         <div>
             <div class="nero-footer-col-title"><?= Html::encode(Yii::t('app', 'footer.contactTitle')) ?></div>
             <div class="nero-footer-contact">
-                <div><?= Html::encode($phoneNumber) ?></div>
+                <?php foreach ($phoneNumbers as $phoneNumber): ?>
+                    <div><?= Html::encode($phoneNumber) ?></div>
+                <?php endforeach; ?>
                 <div><?= Html::encode($address) ?></div>
                 <div><?= Html::encode(Yii::t('app', 'contact.hoursValue')) ?></div>
             </div>

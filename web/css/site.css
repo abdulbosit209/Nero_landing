@@ -527,6 +527,14 @@ section[id] {
     margin: 0 auto 64px;
 }
 
+/* branches map */
+.nero-branches-map {
+    width: 100%;
+    height: 480px;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
 .nero-eyebrow {
     font-size: 13px;
     font-weight: 800;
@@ -991,6 +999,7 @@ section[id] {
 }
 
 .nero-contact-phone {
+    display: block;
     font-size: 20px;
     font-weight: 800;
     color: var(--nero-text-bright);
@@ -1293,6 +1302,10 @@ section[id] {
 
     #footer {
         padding: 48px 20px 24px;
+    }
+
+    .nero-branches-map {
+        height: 320px;
     }
 
     #hero-title {

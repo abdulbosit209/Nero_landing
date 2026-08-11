@@ -25,8 +25,12 @@ $params = [
     'telegramBotToken' => '',
     'telegramChatId' => '',
 
-    // contact details shown in the header, footer and contact section
-    'phoneNumber' => '+998 90 000 00 00',
+    // Yandex Maps JavaScript API key for the "Bizning filiallarimiz" section map
+    // (views/site/_branches.php). Get a key at https://developer.tech.yandex.ru/.
+    'yandexMapsApiKey' => 'YOUR_API_KEY',
+
+    // contact numbers shown in the header, footer and contact section
+    'phoneNumbers' => ['+998 99 255 22 25', '+998 90 359 22 29'],
     'address' => 'Tashkent, Uzbekistan',
 
     // starting prices per service category, in UZS (edit with real prices).
@@ -38,11 +42,11 @@ $params = [
         'dent' => 200000,
         'paint' => 500000,
         'polish' => [
-            'sedan' => 500000,
-            'crossover' => 700000,
+            'sedan' => 1200000,
+            'crossover' => 2000000,
         ],
         'ceramic' => 3500000,
-        'glass' => 120000,
+        'glass' => 700000,
     ],
 ];
 
@@ -52,6 +56,7 @@ $envOverrides = array_filter([
     'cookieValidationKey' => getenv('COOKIE_VALIDATION_KEY') ?: null,
     'telegramBotToken' => getenv('TELEGRAM_BOT_TOKEN') ?: null,
     'telegramChatId' => getenv('TELEGRAM_CHAT_ID') ?: null,
+    'yandexMapsApiKey' => getenv('YANDEX_MAPS_API_KEY') ?: null,
 ], static fn ($value) => $value !== null);
 $params = array_merge($params, $envOverrides);
 

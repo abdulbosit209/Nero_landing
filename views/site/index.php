@@ -23,4 +23,5 @@ $this->params['meta_description'] = Yii::t('app', 'meta.description');
     <?= $this->render('_comparison') ?>
     <?= $this->render('_faq') ?>
     <?= $this->render('_lead-form', ['model' => $leadForm]) ?>
+    <?= $this->render('_branches') ?>
 </div>

@@ -20,18 +20,20 @@ $navItems = [
     'pricing' => Yii::t('app', 'nav.pricing'),
     'compare' => Yii::t('app', 'nav.compare'),
     'faq' => Yii::t('app', 'nav.faq'),
+    'branches' => Yii::t('app', 'nav.branches'),
 ];
 
 // Displayed labels for the language switcher, keyed by language code (see config/params.php).
 $languageLabels = Yii::$app->params['languageLabels'] ?? [];
-$phoneNumber = Yii::$app->params['phoneNumber'] ?? '';
-$phoneHref = 'tel:' . preg_replace('/[^+\d]/', '', $phoneNumber);
+$phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
 ?>
 <div class="nero-header-wrap">
     <div id="topbar" class="nero-topbar">
         <span><?= Html::encode(Yii::t('app', 'topBadge')) ?></span>
         <div class="nero-topbar-utility">
-            <a href="<?= Html::encode($phoneHref) ?>"><?= Html::encode($phoneNumber) ?></a>
+            <?php foreach ($phoneNumbers as $phoneNumber): ?>
+                <a href="<?= Html::encode('tel:' . preg_replace('/[^+\d]/', '', $phoneNumber)) ?>"><?= Html::encode($phoneNumber) ?></a>
+            <?php endforeach; ?>
         </div>
     </div>
     <div id="header-row">

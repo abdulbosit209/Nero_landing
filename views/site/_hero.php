@@ -12,9 +12,10 @@ declare(strict_types=1);
 use yii\helpers\Html;
 use yii\helpers\Url;
 
-$phoneNumber = Yii::$app->params['phoneNumber'] ?? '';
+$phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
 // tel: links must contain only digits and a leading "+" — strip spaces/formatting from the display number.
-$phoneHref = 'tel:' . preg_replace('/[^+\d]/', '', $phoneNumber);
+// The CTA links to the first listed number.
+$phoneHref = 'tel:' . preg_replace('/[^+\d]/', '', $phoneNumbers[0] ?? '');
 ?>
 <div id="hero">
     <div class="nero-hero-inner">

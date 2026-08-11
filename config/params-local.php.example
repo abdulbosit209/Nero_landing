@@ -8,4 +8,5 @@ return [
     'cookieValidationKey' => 'replace-me-with-a-long-random-string',
     'telegramBotToken' => '123456789:AA...replace-me',
     'telegramChatId' => '-1001234567890',
+    'yandexMapsApiKey' => 'replace-me-with-a-real-yandex-maps-api-key',
 ];

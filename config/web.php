@@ -36,6 +36,12 @@ $config = [
         'cache' => [
             'class' => \yii\caching\FileCache::class,
         ],
+        'assetManager' => [
+            // Appends each asset URL with its file's mtime (e.g. site.css?v=173...)
+            // so browsers fetch a fresh copy whenever css/site.css or app.js changes,
+            // instead of serving a stale cached version indefinitely.
+            'appendTimestamp' => true,
+        ],
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],

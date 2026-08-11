@@ -6,7 +6,7 @@ return [
     'meta.title' => 'NERO — Toshkentda mobil avtoservis va botiq ta\'miri',
     'meta.description' => 'NERO — Toshkentdagi mobil avtoservis: bo\'yoqqa tegmasdan botiq chiqarish, bo\'yoq yamash, polirovka, keramik qoplama va oyna tiklash. Mutaxassislar sizga keladi.',
 
-    'topBadge' => '24/7 mobil avtoservis · Toshkent',
+    'topBadge' => '24/7 avtoservis · Toshkent',
 
     'nav.services' => 'Xizmatlar',
     'nav.advantages' => 'Afzalliklar',
@@ -14,6 +14,7 @@ return [
     'nav.pricing' => 'Narxlar',
     'nav.compare' => 'Taqqoslash',
     'nav.faq' => 'Savollar',
+    'nav.branches' => 'Filiallar',
     'nav.contact' => 'Aloqa',
 
     'ctaRequest' => 'Ariza qoldirish',
@@ -111,6 +112,10 @@ return [
     'faq.payment.a' => 'Naqd pul, karta, Uzcard, Humo va bank o\'tkazmasi ish tugagach qabul qilinadi.',
     'faq.spotRepair.q' => 'Faqat chizilgan joyni tuzatish mumkinmi, butun qismni emas?',
     'faq.spotRepair.a' => 'Ha, kosmetik yamash xizmatimiz faqat shikastlangan joyni ishlaydi, shu bilan narxni pasaytiradi.',
+
+    'branches.sectionEyebrow' => 'Filiallar',
+    'branches.sectionTitle' => 'Bizning filiallarimiz',
+    'branches.sectionSub' => 'Toshkent bo\'ylab joylashgan filiallarimiz — xaritadan eng yaqinini toping.',
 
     'contact.sectionEyebrow' => 'Aloqa',
     'contact.sectionTitle' => 'Chaqiruv uchun ariza qoldiring',
