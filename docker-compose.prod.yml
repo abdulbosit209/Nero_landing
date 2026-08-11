@@ -1,0 +1,32 @@
+# Production compose file for plain Docker hosts (e.g. a DigitalOcean Droplet) that
+# have no built-in reverse proxy/TLS termination, unlike Render (see render.yaml).
+# Builds the same Dockerfile used for PaaS deploys and puts nginx in front of it.
+#
+# Usage on the host:
+#   cp .env.prod.example .env
+#   # fill in the real secrets in .env
+#   docker compose -f docker-compose.prod.yml up -d --build
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    environment:
+      YII_ENV: prod
+      YII_DEBUG: "0"
+      PORT: "10000"
+      COOKIE_VALIDATION_KEY: ${COOKIE_VALIDATION_KEY}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      TELEGRAM_CHAT_ID: ${TELEGRAM_CHAT_ID}
+      YANDEX_MAPS_API_KEY: ${YANDEX_MAPS_API_KEY}
+    expose:
+      - "10000"
+
+  nginx:
+    image: nginx:1.27-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./docker/nginx.prod.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - app

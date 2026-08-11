@@ -36,6 +36,7 @@ tests/Support/_generated
 
 # local secrets (never commit)
 /config/params-local.php
+/.env
 
 # Claude Code local session/tool config (not project config)
 /.claude/

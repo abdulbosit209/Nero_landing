@@ -17,3 +17,6 @@ docs
 vagrant
 Vagrantfile
 docker-compose.yml
+docker-compose.prod.yml
+.env
+.env.prod.example
