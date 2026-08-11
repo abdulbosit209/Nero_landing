@@ -127,6 +127,30 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
 
 <?php $this->registerJs(<<<'JS'
 (function () {
+    // The "Request a Service" CTAs link here with ?service=<slug> (pricing cards) or
+    // ?focus=service (header/hero, which aren't tied to a specific service) so arriving
+    // at the form either preselects the matching service or just puts focus on the
+    // dropdown as the natural next field to fill in.
+    var select = document.getElementById('leadform-service');
+    if (!select) {
+        return;
+    }
+    var params = new URLSearchParams(window.location.search);
+    var service = params.get('service');
+    if (service) {
+        var hasOption = Array.prototype.some.call(select.options, function (option) {
+            return option.value === service;
+        });
+        if (hasOption) {
+            select.value = service;
+        }
+    }
+    if (service || params.has('focus')) {
+        select.focus();
+    }
+})();
+
+(function () {
     var input = document.getElementById('leadform-photos');
     var previews = document.getElementById('lead-form-photo-previews');
     var uploadLabel = document.getElementById('lead-form-photo-label');

@@ -55,7 +55,7 @@ $phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
                     ><?= Html::encode($label) ?></option>
                 <?php endforeach; ?>
             </select>
-            <a href="<?= Url::to(['/site/index', '#' => 'contact']) ?>" class="nero-btn">
+            <a href="<?= Url::to(['/site/index', 'focus' => 'service', '#' => 'contact']) ?>" class="nero-btn">
                 <?= Html::encode(Yii::t('app', 'ctaRequest')) ?>
             </a>
         </div>

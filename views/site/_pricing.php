@@ -51,7 +51,7 @@ $pricing = Yii::$app->params['pricing'] ?? [];
                         <span class="nero-pricing-unit"><?= Html::encode(Yii::t('app', 'pricing.unit')) ?></span>
                     </div>
                 <?php endif; ?>
-                <a href="<?= Url::to(['/site/index', '#' => 'contact']) ?>" class="nero-pricing-cta">
+                <a href="<?= Url::to(['/site/index', 'service' => $slug, '#' => 'contact']) ?>" class="nero-pricing-cta">
                     <?= Html::encode(Yii::t('app', 'pricing.cta')) ?>
                 </a>
             </div>
