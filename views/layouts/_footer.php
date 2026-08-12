@@ -13,6 +13,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 $phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
+$phoneOwners = Yii::$app->params['phoneOwners'] ?? [];
 $address = Yii::$app->params['address'] ?? '';
 ?>
 <footer id="footer">
@@ -38,8 +39,13 @@ $address = Yii::$app->params['address'] ?? '';
         <div>
             <div class="nero-footer-col-title"><?= Html::encode(Yii::t('app', 'footer.contactTitle')) ?></div>
             <div class="nero-footer-contact">
-                <?php foreach ($phoneNumbers as $phoneNumber): ?>
-                    <div><?= Html::encode($phoneNumber) ?></div>
+                <?php foreach ($phoneNumbers as $i => $phoneNumber): ?>
+                    <div>
+                        <?= Html::encode($phoneNumber) ?>
+                        <?php if (isset($phoneOwners[$i])): ?>
+                            <span class="nero-footer-phone-owner"><?= Html::encode(Yii::t('app', 'contact.phoneOwner.' . $phoneOwners[$i])) ?></span>
+                        <?php endif; ?>
+                    </div>
                 <?php endforeach; ?>
                 <div><?= Html::encode($address) ?></div>
                 <div><?= Html::encode(Yii::t('app', 'contact.hoursValue')) ?></div>

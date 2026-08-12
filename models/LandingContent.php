@@ -26,7 +26,7 @@ final class LandingContent
      *
      * @var string[]
      */
-    public const SERVICES = ['dent', 'paint', 'polish', 'ceramic', 'glass'];
+    public const SERVICES = ['dent', 'paint', 'polish', 'ceramic', 'glass', 'crackRepair'];
 
     /**
      * "Recent work" gallery entries. Currently mirrors SERVICES 1:1 (one showcased
@@ -42,7 +42,7 @@ final class LandingContent
      *
      * @var string[]
      */
-    public const ADVANTAGES = ['warranty', 'certified', 'payAfter', 'flexPay', 'oemParts'];
+    public const ADVANTAGES = ['warranty', 'certified', 'flexPay', 'oemParts'];
 
     /**
      * Inline SVG icon markup shown inside each advantage card's icon tile, keyed by

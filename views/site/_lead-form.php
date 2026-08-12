@@ -16,6 +16,7 @@ use yii\bootstrap5\ActiveForm;
 use yii\bootstrap5\Html;
 
 $phoneNumbers = Yii::$app->params['phoneNumbers'] ?? [];
+$phoneOwners = Yii::$app->params['phoneOwners'] ?? [];
 $address = Yii::$app->params['address'] ?? '';
 // Field labels are visually hidden (placeholders carry the visible hint) but remain in
 // the DOM for screen readers.
@@ -32,8 +33,13 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
             <div class="nero-contact-info-row">
                 <div>
                     <div class="nero-contact-label"><?= Html::encode(Yii::t('app', 'contact.phoneLabel')) ?></div>
-                    <?php foreach ($phoneNumbers as $phoneNumber): ?>
-                        <a class="nero-contact-phone" href="<?= Html::encode('tel:' . preg_replace('/[^+\d]/', '', $phoneNumber)) ?>"><?= Html::encode($phoneNumber) ?></a>
+                    <?php foreach ($phoneNumbers as $i => $phoneNumber): ?>
+                        <div class="nero-contact-phone-row">
+                            <a class="nero-contact-phone" href="<?= Html::encode('tel:' . preg_replace('/[^+\d]/', '', $phoneNumber)) ?>"><?= Html::encode($phoneNumber) ?></a>
+                            <?php if (isset($phoneOwners[$i])): ?>
+                                <span class="nero-contact-phone-owner"><?= Html::encode(Yii::t('app', 'contact.phoneOwner.' . $phoneOwners[$i])) ?></span>
+                            <?php endif; ?>
+                        </div>
                     <?php endforeach; ?>
                 </div>
                 <div>
@@ -57,22 +63,42 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
             ->label(Yii::t('app', 'form.label.name'), $labelOptions)
             ->textInput(['placeholder' => Yii::t('app', 'form.placeholder.name')]) ?>
 
-        <?= $form->field($model, 'phoneNumber', ['template' => "{label}\n{input}\n{error}"])
-            ->label(Yii::t('app', 'form.label.phoneNumber'), $labelOptions)
-            ->textInput(['type' => 'tel', 'placeholder' => Yii::t('app', 'form.placeholder.phoneNumber')]) ?>
+        <?php
+        // The user only ever types the 9 digits after the country code; "+998" is a
+        // fixed prefix they can't edit or accidentally delete. The visible input here
+        // is display-only (not posted) — it formats digits live as (90) 001-00-10 and
+        // mirrors the plain "+998XXXXXXXXX" value into the real, hidden model field
+        // that actually gets submitted/validated (see JS below).
+        $phonePlaceholder = Html::encode(Yii::t('app', 'form.placeholder.phoneNumber'));
+        ?>
+        <?= $form->field($model, 'phoneNumber', [
+            'template' => "{label}\n"
+                . '<div class="nero-phone-field">'
+                . '<span class="nero-phone-prefix">+998</span>'
+                . '<input type="tel" id="lead-form-phone-display" class="form-control" '
+                . 'inputmode="numeric" autocomplete="tel-national" maxlength="14" '
+                . 'placeholder="' . $phonePlaceholder . '">'
+                . '{input}'
+                . "</div>\n{error}",
+        ])
+            ->label(Yii::t('app', 'form.label.phoneNumber'), $labelOptions + ['for' => 'lead-form-phone-display'])
+            ->hiddenInput() ?>
 
         <?= $form->field($model, 'service', ['template' => "{label}\n{input}\n{error}"])
             ->label(Yii::t('app', 'form.label.service'), $labelOptions)
             ->dropDownList(LeadForm::serviceOptions(), ['prompt' => Yii::t('app', 'form.service.placeholder')]) ?>
 
         <div class="nero-form-row">
-            <?= $form->field($model, 'preferredDate', ['template' => "{label}\n{input}\n{error}"])
-                ->label(Yii::t('app', 'form.label.preferredDate'), $labelOptions)
-                ->input('date', [
-                    'id' => 'lead-form-date',
-                    'min' => date('Y-m-d'),
-                    'autocomplete' => 'off',
-                ]) ?>
+            <div class="nero-date-field" id="lead-form-date-field">
+                <?= $form->field($model, 'preferredDate', ['template' => "{label}\n{input}\n{error}"])
+                    ->label(Yii::t('app', 'form.label.preferredDate'), $labelOptions)
+                    ->input('date', [
+                        'id' => 'lead-form-date',
+                        'min' => date('Y-m-d'),
+                        'autocomplete' => 'off',
+                    ]) ?>
+                <span class="nero-date-placeholder-text" aria-hidden="true"><?= Html::encode(Yii::t('app', 'form.date.placeholder')) ?></span>
+            </div>
 
             <?= $form->field($model, 'preferredTime', ['template' => "{label}\n{input}\n{error}"])
                 ->label(Yii::t('app', 'form.label.preferredTime'), $labelOptions)
@@ -119,13 +145,106 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
             ></div>
         </div>
 
-        <?= Html::submitButton(Html::encode(Yii::t('app', 'form.submit')), ['class' => 'nero-submit-btn']) ?>
+        <?= Html::submitButton(Html::encode(Yii::t('app', 'form.submit')), [
+            'id' => 'lead-form-submit-btn',
+            'class' => 'nero-submit-btn',
+            'data-label-idle' => Yii::t('app', 'form.submit'),
+            'data-label-loading' => Yii::t('app', 'form.submitting'),
+        ]) ?>
 
         <?php ActiveForm::end(); ?>
     </div>
 </section>
 
 <?php $this->registerJs(<<<'JS'
+(function () {
+    // Splits whatever digits the user typed/pasted into the (XX) XXX-XX-XX groups of
+    // a 9-digit local number, formatting progressively so it looks right mid-type too.
+    function formatPhoneDigits(digits) {
+        var out = '';
+        if (digits.length > 0) {
+            out += '(' + digits.slice(0, 2);
+        }
+        if (digits.length >= 2) {
+            out += ') ';
+        }
+        if (digits.length > 2) {
+            out += digits.slice(2, 5);
+        }
+        if (digits.length > 5) {
+            out += '-' + digits.slice(5, 7);
+        }
+        if (digits.length > 7) {
+            out += '-' + digits.slice(7, 9);
+        }
+        return out;
+    }
+
+    // Strips everything but digits, then drops a leading "998" country code if one
+    // slipped in (e.g. pasting/autofilling a full "+998901234567" number).
+    function normalizeDigits(raw) {
+        var digits = raw.replace(/\D/g, '');
+        if (digits.length > 9 && digits.slice(0, 3) === '998') {
+            digits = digits.slice(3);
+        }
+        return digits.slice(0, 9);
+    }
+
+    var display = document.getElementById('lead-form-phone-display');
+    var hidden = document.getElementById('leadform-phonenumber');
+    if (!display || !hidden) {
+        return;
+    }
+
+    // Redisplaying the form after a failed submit re-renders the hidden field with
+    // the previously submitted value — seed the visible input from it so the user
+    // doesn't see a blank field next to their (still-filled-in) phone number.
+    var initialDigits = normalizeDigits(hidden.value);
+    if (initialDigits) {
+        display.value = formatPhoneDigits(initialDigits);
+    }
+
+    display.addEventListener('input', function () {
+        var caret = display.selectionStart;
+        var digitsBeforeCaret = display.value.slice(0, caret).replace(/\D/g, '').length;
+
+        var digits = normalizeDigits(display.value);
+        var formatted = formatPhoneDigits(digits);
+        display.value = formatted;
+
+        // Re-place the caret after the same count of digits it followed before
+        // reformatting, so editing mid-number doesn't kick the cursor to the end.
+        var pos = 0;
+        var seen = 0;
+        while (pos < formatted.length && seen < digitsBeforeCaret) {
+            if (/\d/.test(formatted[pos])) {
+                seen++;
+            }
+            pos++;
+        }
+        display.setSelectionRange(pos, pos);
+
+        hidden.value = digits.length ? ('+998' + digits) : '';
+    });
+
+    // Yii's client validation binds to 'change'/'blur' on the bound field (not every
+    // keystroke) — mirror that here so an in-progress number doesn't flash an error
+    // before the user has finished typing it.
+    display.addEventListener('blur', function () {
+        hidden.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+
+    // Yii's client-side validation toggles `is-invalid` on the actual bound field,
+    // which is the hidden input here and so never renders — mirror that class onto
+    // the visible display input so the red-border state still shows to the user.
+    if (window.MutationObserver) {
+        var observer = new MutationObserver(function () {
+            display.classList.toggle('is-invalid', hidden.classList.contains('is-invalid'));
+        });
+        observer.observe(hidden, { attributes: true, attributeFilter: ['class'] });
+    }
+})();
+
 (function () {
     // The "Request a Service" CTAs link here with ?service=<slug> (pricing cards) or
     // ?focus=service (header/hero, which aren't tied to a specific service) so arriving
@@ -228,9 +347,22 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
     // Blocking keyboard entry by hand achieves the same "pick, don't type" result
     // while leaving the field mutable enough for showPicker() to keep working.
     var dateInput = document.getElementById('lead-form-date');
+    var dateField = document.getElementById('lead-form-date-field');
     if (!dateInput) {
         return;
     }
+
+    // Native date inputs render their own locale placeholder (e.g. "dd/mm/yyyy")
+    // that can't be overridden via the `placeholder` attribute. We hide that native
+    // text (see .is-empty rule in CSS) and show our own "Select a date" label on
+    // top instead, toggled to match whether a value is actually selected.
+    function syncEmptyState() {
+        if (dateField) {
+            dateField.classList.toggle('is-empty', !dateInput.value);
+        }
+    }
+    syncEmptyState();
+    dateInput.addEventListener('change', syncEmptyState);
 
     function openPicker() {
         if (typeof dateInput.showPicker === 'function') {
@@ -256,6 +388,41 @@ $labelOptions = ['class' => 'visually-hidden form-label'];
         openPicker();
     });
     dateInput.addEventListener('focus', openPicker);
+})();
+
+(function () {
+    // Yii's ActiveForm JS (loaded as part of YiiAsset, which AppAsset depends on)
+    // triggers 'beforeSubmit' on the form only once client validation has passed and
+    // the real submit is about to happen — the correct hook for a loading state, as
+    // opposed to the plain 'submit' event which also fires on the initial,
+    // validation-only pass. This is a full (non-AJAX) POST, so the button just needs
+    // to stay disabled until the browser navigates away with the redirect response.
+    var form = document.getElementById('lead-form-form');
+    var button = document.getElementById('lead-form-submit-btn');
+    if (!form || !button || !window.jQuery) {
+        return;
+    }
+
+    var loadingLabel = button.dataset.labelLoading;
+
+    jQuery(form).on('beforeSubmit', function () {
+        button.disabled = true;
+        button.classList.add('is-loading');
+        if (loadingLabel) {
+            button.textContent = loadingLabel;
+        }
+    });
+
+    // A back/forward navigation can restore this exact page (with the button still
+    // disabled) from the browser's bfcache instead of reloading it — reset the button
+    // so the form isn't stuck unusable if the user navigates back to it.
+    window.addEventListener('pageshow', function (e) {
+        if (e.persisted) {
+            button.disabled = false;
+            button.classList.remove('is-loading');
+            button.textContent = button.dataset.labelIdle || button.textContent;
+        }
+    });
 })();
 JS
 ) ?>

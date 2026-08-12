@@ -30,7 +30,10 @@ $params = [
     'yandexMapsApiKey' => 'YOUR_API_KEY',
 
     // contact numbers shown in the header, footer and contact section
-    'phoneNumbers' => ['+998 99 255 22 25', '+998 90 359 22 29'],
+    'phoneNumbers' => ['+998 99 255 22 25', '+998 70 174 89 79'],
+    // person each number belongs to, same order as phoneNumbers — translation-key
+    // suffixes for contact.phoneOwner.* (see messages/{lang}/app.php)
+    'phoneOwners' => ['sardor', 'timofey'],
     'address' => 'Tashkent, Uzbekistan',
 
     // starting prices per service category, in UZS (edit with real prices).
@@ -40,13 +43,14 @@ $params = [
     // either shape.
     'pricing' => [
         'dent' => 200000,
-        'paint' => 500000,
+        'paint' => 1000000,
         'polish' => [
             'sedan' => 1200000,
             'crossover' => 2000000,
         ],
         'ceramic' => 3500000,
         'glass' => 700000,
+        'crackRepair' => 50000,
     ],
 ];
 

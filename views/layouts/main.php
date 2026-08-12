@@ -40,6 +40,38 @@ $this->render('_head');
 
 <?= $this->render('_footer') ?>
 
+<?php $this->registerJs(<<<'JS'
+(function () {
+    // The success/error flash toast (styled in site.css) has no fixed lifetime of its
+    // own — without this it just sits until the user notices the close button, which
+    // is easy to miss since it renders bottom-fixed, away from wherever the user's
+    // attention actually is right after a redirect. Auto-dismissing (with a fade so
+    // it doesn't just vanish) makes sure it was actually seen, while the close button
+    // still works for anyone who wants it gone sooner.
+    var alerts = document.querySelectorAll('#main > .alert');
+    alerts.forEach(function (alert) {
+        var timer = setTimeout(function () {
+            dismiss();
+        }, 6000);
+
+        function dismiss() {
+            clearTimeout(timer);
+            alert.classList.add('nero-toast-out');
+            alert.addEventListener('animationend', function () {
+                alert.remove();
+            });
+        }
+
+        // Don't fight a manual close (Bootstrap's own dismiss already removes the
+        // element); just stop the pending auto-dismiss from also touching it.
+        alert.addEventListener('closed.bs.alert', function () {
+            clearTimeout(timer);
+        });
+    });
+})();
+JS
+) ?>
+
 <?php $this->endBody() ?>
 </body>
 </html>
