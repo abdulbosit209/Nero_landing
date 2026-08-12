@@ -1,25 +1,18 @@
 (function () {
     'use strict';
 
-    // Sample Tashkent branches — replace with real locations/coordinates/phones.
     var NERO_BRANCHES = [
         {
-            name: 'NERO — Chilonzor filiali',
-            address: 'Toshkent sh., Chilonzor tumani, Bunyodkor shoh ko\'chasi, 12-uy',
-            coords: [41.284, 69.204],
-            phone: '+998900000001',
+            name: 'NERO Premium — Temur Malik filiali',
+            address: 'Toshkent sh., Temur Malik ko\'chasi',
+            coords: [41.331057, 69.359197],
+            phone: '+998992552225',
         },
         {
-            name: 'NERO — Yunusobod filiali',
-            address: 'Toshkent sh., Yunusobod tumani, Amir Temur shoh ko\'chasi, 45-uy',
-            coords: [41.338, 69.288],
-            phone: '+998900000002',
-        },
-        {
-            name: 'NERO — Mirzo Ulug\'bek filiali',
-            address: 'Toshkent sh., Mirzo Ulug\'bek tumani, Buyuk Ipak Yo\'li ko\'chasi, 78-uy',
-            coords: [41.311081, 69.240562],
-            phone: '+998900000003',
+            name: 'Carvon',
+            address: 'Toshkent sh., Salar bo\'yi ko\'chasi, 47',
+            coords: [41.330066, 69.313136],
+            phone: '+998955555252',
         },
     ];
 
