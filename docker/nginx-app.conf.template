@@ -1,0 +1,29 @@
+# Templated at container start (see docker-entrypoint.sh) because nginx config can't
+# reference the platform-assigned $PORT env var directly — only ${PORT} is substituted,
+# every other $-prefixed token below is literal nginx config and passed through as-is.
+server {
+    listen ${PORT};
+    server_name _;
+    root /app/web;
+    index index.php;
+
+    # Matches post_max_size in docker/uploads.ini so lead-form photo uploads (up to
+    # LeadForm::MAX_PHOTOS originals) aren't rejected before reaching PHP.
+    client_max_body_size 80M;
+
+    location / {
+        try_files $uri $uri/ /index.php$is_args$args;
+    }
+
+    location ~ \.php$ {
+        fastcgi_pass 127.0.0.1:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
+
+    location ~ /\.(ht|git) {
+        deny all;
+    }
+}
