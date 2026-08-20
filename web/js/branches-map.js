@@ -5,13 +5,13 @@
         {
             name: 'NERO Premium — Temur Malik filiali',
             address: 'Toshkent sh., Temur Malik ko\'chasi',
-            coords: [41.331057, 69.359197],
+            coords: [41.315905, 69.355295],
             phone: '+998992552225',
         },
         {
             name: 'Carvon',
             address: 'Toshkent sh., Salar bo\'yi ko\'chasi, 47',
-            coords: [41.330066, 69.313136],
+            coords: [41.329239, 69.313014],
             phone: '+998955555252',
         },
     ];

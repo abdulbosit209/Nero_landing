@@ -48,8 +48,8 @@ $params = [
             'sedan' => 1200000,
             'crossover' => 2000000,
         ],
-        'ceramic' => 3500000,
-        'glass' => 700000,
+        'ceramic' => 1000000,
+        'glass' => 200000,
         'crackRepair' => 50000,
     ],
 ];
